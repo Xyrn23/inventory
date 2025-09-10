@@ -1,0 +1,166 @@
+
+
+body {
+    font-family: Arial, sans-serif;
+    color: white;
+    padding: 20px;
+    background: #001f52;
+    background: -webkit-linear-gradient(90deg, rgba(0, 31, 82, 1) 0%, rgba(3, 81, 145, 1) 66%, rgba(31, 146, 240, 1) 100%);
+    background: -moz-linear-gradient(90deg, rgba(0, 31, 82, 1) 0%, rgba(3, 81, 145, 1) 66%, rgba(31, 146, 240, 1) 100%);
+    background: linear-gradient(90deg, rgba(0, 31, 82, 1) 0%, rgba(3, 81, 145, 1) 66%, rgba(31, 146, 240, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#001F52", endColorstr="#1F92F0", GradientType=1);
+}
+
+form {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.13);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.2px);
+    -webkit-backdrop-filter: blur(5.2px);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 8px;
+    padding: 20px;
+    color: white;
+}
+
+
+input,
+textarea,
+button {
+    width: 100%;
+    margin: 8px 0;
+    padding: 8px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background: transparent;
+    border: none;
+    color: white;
+}
+
+textarea {
+    resize: none;
+}
+input::placeholder, textarea::placeholder {
+    color: #E4E0E0;
+    opacity: 50%;    
+}
+.__image_upload {
+    border: none;
+}
+
+input[type="number"] {
+    width: 50%;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus {
+    outline: 2px solid black;
+}
+
+/* test area */
+.__description-field textarea {
+    width: 100%;
+    min-height: 200px;
+    resize: vertical;
+}
+
+.__product_name {
+    grid-column: span 2 / span 2;
+}
+
+.__product_price {
+    grid-column-start: 1;
+    grid-row-start: 2;
+}
+
+.__product_quantity {
+    grid-column-start: 2;
+    grid-row-start: 2;
+}
+
+.__product_image_1 {
+    grid-column-start: 1;
+    grid-row-start: 3;
+}
+
+.__product_image_2 {
+    grid-column-start: 2;
+    grid-row-start: 3;
+}
+
+.__description-field {
+    grid-column: span 3 / span 3;
+    grid-row: span 3 / span 3;
+    grid-column-start: 3;
+    grid-row-start: 1;
+}
+
+.__add_product_btn {
+    grid-column: span 3 / span 3;
+    grid-column-start: 2;
+    grid-row-start: 4;
+}
+
+/* end of test area */
+button {
+    background: #051355;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0b1b6e;
+}
+
+.actions {
+    margin-top: 20px;
+}
+
+.actions a {
+    text-decoration: none;
+    padding: 10px 15px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.logout {
+    background: #f70019;
+    color: white;
+}
+
+.inventory {
+    background: #051355;
+    color: white;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #28a745;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
