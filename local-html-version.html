@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Description Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.8.0/recharts.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const ProductDescriptionGenerator = () => {
+            const [inputText, setInputText] = useState('');
+            const [generatedData, setGeneratedData] = useState('');
+            const [loading, setLoading] = useState(false);
+
+            // Product descriptions template
+            const productDescriptions = {
+                'Mouse': [
+                    'Ergonomic wireless mouse with precision optical sensor and long battery life',
+                    'High-performance gaming mouse with customizable RGB lighting and programmable buttons',
+                    'Compact travel mouse with silent clicks and universal compatibility'
+                ],
+                'Keyboard': [
+                    'Mechanical gaming keyboard with tactile switches and customizable backlighting',
+                    'Wireless ergonomic keyboard with palm rest and quiet keystrokes',
+                    'Compact 60% mechanical keyboard with hot-swappable switches'
+                ],
+                'Monitor': [
+                    '24-inch Full HD IPS monitor with ultra-thin bezels and adjustable stand',
+                    '27-inch 4K UHD monitor with HDR support and USB-C connectivity',
+                    '32-inch curved gaming monitor with 144Hz refresh rate and FreeSync technology'
+                ],
+                'Laptop': [
+                    'Ultra-portable business laptop with Intel Core i7 processor and 16GB RAM',
+                    'High-performance gaming laptop with dedicated graphics and RGB keyboard',
+                    'Lightweight 2-in-1 convertible laptop with touchscreen and stylus support'
+                ],
+                'Headset': [
+                    'Premium noise-cancelling wireless headset with superior audio quality',
+                    'Professional gaming headset with 7.1 surround sound and detachable microphone',
+                    'Comfortable over-ear headset with crystal-clear communication and long battery life'
+                ],
+                'Webcam': [
+                    '1080p HD webcam with auto-focus and built-in noise-cancelling microphone',
+                    '4K ultra-wide webcam with privacy shutter and professional lighting correction',
+                    'Compact webcam with 60fps streaming capability and plug-and-play setup'
+                ],
+                'Speakers': [
+                    'High-fidelity bookshelf speakers with rich bass and clear treble response',
+                    'Wireless Bluetooth speakers with 360-degree sound and waterproof design',
+                    'Studio monitor speakers with accurate sound reproduction for professional use'
+                ],
+                'Chair': [
+                    'Ergonomic office chair with lumbar support and adjustable height mechanism',
+                    'Premium leather executive chair with memory foam padding and swivel base',
+                    'Gaming chair with racing-style design, armrest adjustability, and reclining function'
+                ],
+                'Tablet': [
+                    '10-inch Android tablet with high-resolution display and expandable storage',
+                    'Professional tablet with stylus support and productivity-focused features',
+                    'Compact 8-inch tablet perfect for reading, streaming, and light productivity tasks'
+                ],
+                'Printer': [
+                    'All-in-one inkjet printer with wireless connectivity and automatic duplex printing',
+                    'High-speed laser printer ideal for office environments with large print volumes',
+                    'Photo printer with professional-grade color accuracy and borderless printing capability'
+                ],
+                'Microphone': [
+                    'Professional condenser microphone with cardioid pickup pattern and shock mount',
+                    'USB podcasting microphone with built-in headphone monitoring and mute button',
+                    'Dynamic microphone with exceptional feedback rejection and rugged construction'
+                ],
+                'Solid State Drive': [
+                    'High-speed NVMe SSD with 3D NAND technology and exceptional read/write speeds',
+                    'Portable external SSD with USB-C connectivity and military-grade durability',
+                    'Internal SATA SSD with reliable performance and advanced error correction'
+                ],
+                'Hard Disk Drive': [
+                    'High-capacity desktop HDD with 7200 RPM speed and reliable data storage',
+                    'Portable external hard drive with USB 3.0 connectivity and backup software',
+                    'Enterprise-grade hard drive designed for 24/7 operation and data center use'
+                ],
+                'Processor': [
+                    'High-performance multi-core processor with advanced architecture and integrated graphics',
+                    'Flagship CPU with exceptional processing power for gaming and content creation',
+                    'Energy-efficient processor optimized for mobile devices and extended battery life'
+                ],
+                'Graphics Card': [
+                    'High-end graphics card with ray tracing support and 4K gaming performance',
+                    'Professional graphics card optimized for content creation and 3D rendering',
+                    'Mid-range GPU offering excellent 1440p gaming performance and efficient power consumption'
+                ],
+                'Memory': [
+                    'High-speed DDR4 RAM with low latency and excellent overclocking potential',
+                    'Professional-grade memory modules with error correction and server compatibility',
+                    'Gaming memory with RGB lighting and optimized performance profiles'
+                ],
+                'Cable': [
+                    'Premium USB-C cable with fast charging support and data transfer capability',
+                    'High-quality HDMI cable with 4K support and gold-plated connectors',
+                    'Durable charging cable with reinforced connectors and tangle-free design'
+                ],
+                'Laptop Bag': [
+                    'Professional laptop backpack with multiple compartments and water-resistant material',
+                    'Sleek laptop messenger bag with padded compartment and organizational pockets',
+                    'Convertible laptop bag that transforms from briefcase to backpack with ergonomic design'
+                ],
+                'Stylus': [
+                    'Precision stylus with pressure sensitivity and palm rejection technology',
+                    'Universal stylus compatible with multiple devices and responsive tip technology',
+                    'Professional digital stylus with customizable buttons and exceptional accuracy'
+                ],
+                'Docking Station': [
+                    'Universal docking station with multiple ports and dual monitor support',
+                    'USB-C hub with power delivery and comprehensive connectivity options',
+                    'Professional docking solution with Thunderbolt compatibility and fast data transfer'
+                ]
+            };
+
+            const processProducts = () => {
+                setLoading(true);
+                
+                try {
+                    const lines = inputText.split('\n').filter(line => line.trim());
+                    
+                    const productList = lines.map(line => {
+                        const [code, name, price, quantity] = line.split(',');
+                        return {
+                            code: code?.trim(),
+                            name: name?.trim(),
+                            price: parseFloat(price),
+                            quantity: parseInt(quantity)
+                        };
+                    }).filter(p => p.code && p.name);
+
+                    // Generate descriptions for each product
+                    const productCounts = {};
+                    const processedProducts = productList.map(product => {
+                        const productName = product.name;
+                        
+                        // Track how many of each product type we've seen
+                        if (!productCounts[productName]) {
+                            productCounts[productName] = 0;
+                        }
+                        
+                        const descriptionIndex = productCounts[productName] % 3;
+                        productCounts[productName]++;
+                        
+                        const description = productDescriptions[productName] 
+                            ? productDescriptions[productName][descriptionIndex]
+                            : `High-quality ${productName.toLowerCase()} with professional features and reliable performance`;
+                        
+                        return {
+                            ...product,
+                            description
+                        };
+                    });
+
+                    // Generate CSV format
+                    const csvHeader = 'code,name,description,price,quantity\n';
+                    const csvData = processedProducts.map(p => 
+                        `${p.code},${p.name},"${p.description}",${p.price},${p.quantity}`
+                    ).join('\n');
+                    
+                    const fullCsv = csvHeader + csvData;
+                    setGeneratedData(fullCsv);
+                } catch (error) {
+                    console.error('Error processing products:', error);
+                    alert('Error processing products. Please check your input format.');
+                }
+                
+                setLoading(false);
+            };
+
+            const copyToClipboard = () => {
+                navigator.clipboard.writeText(generatedData);
+                alert('Copied to clipboard!');
+            };
+
+            const downloadCsv = () => {
+                const blob = new Blob([generatedData], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'products_with_descriptions.csv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            };
+
+            const loadSampleData = () => {
+                const sampleData = `MOU-000001,Mouse,300.0,25
+KEY-000002,Keyboard,800.0,15
+MON-000003,Monitor,4500.0,10
+LAP-000004,Laptop,3500.0,5
+HEA-000005,Headset,1200.0,20
+CAM-000006,Webcam,950.0,18
+SPE-000007,Speakers,1500.0,12
+CHA-000008,Chair,3200.0,8
+TAB-000009,Tablet,2800.0,6
+PRI-000010,Printer,4200.0,9`;
+                setInputText(sampleData);
+            };
+
+            return (
+                <div className="max-w-6xl mx-auto p-6 space-y-6">
+                    <div className="text-center bg-gradient-to-br from-green-50 to-blue-100 p-8 rounded-lg">
+                        <h1 className="text-3xl font-bold text-gray-800 mb-2">Product Description Generator</h1>
+                        <p className="text-gray-600">Add descriptions to your product data (Local Version)</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="bg-white p-6 rounded-lg shadow-md">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-xl font-semibold text-gray-700">Input Product Data</h2>
+                                <button
+                                    onClick={loadSampleData}
+                                    className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                                >
+                                    Load Sample
+                                </button>
+                            </div>
+                            <textarea
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
+                                placeholder="Paste your product data here (format: code,name,price,quantity)&#10;Example:&#10;MOU-000001,Mouse,300.0,25&#10;KEY-000002,Keyboard,800.0,15"
+                                className="w-full h-80 p-4 border border-gray-300 rounded-lg font-mono text-sm"
+                            />
+                            <button
+                                onClick={processProducts}
+                                disabled={!inputText.trim() || loading}
+                                className="mt-4 w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors"
+                            >
+                                {loading ? 'Processing...' : 'Generate Descriptions'}
+                            </button>
+                        </div>
+
+                        <div className="bg-white p-6 rounded-lg shadow-md">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-xl font-semibold text-gray-700">Generated Output</h2>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={copyToClipboard}
+                                        disabled={!generatedData}
+                                        className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-3 py-2 rounded text-sm transition-colors"
+                                    >
+                                        Copy
+                                    </button>
+                                    <button
+                                        onClick={downloadCsv}
+                                        disabled={!generatedData}
+                                        className="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-3 py-2 rounded text-sm transition-colors"
+                                    >
+                                        Download
+                                    </button>
+                                </div>
+                            </div>
+                            <textarea
+                                value={generatedData}
+                                readOnly
+                                placeholder="Generated CSV data will appear here..."
+                                className="w-full h-80 p-4 border border-gray-300 rounded-lg font-mono text-sm bg-gray-50"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <h3 className="font-semibold text-gray-700 mb-3">How to use:</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                            <div>
+                                <p className="font-medium mb-2">Input Format:</p>
+                                <ul className="space-y-1">
+                                    <li>• Paste your product data in the left box</li>
+                                    <li>• Format: code,name,price,quantity</li>
+                                    <li>• One product per line</li>
+                                    <li>• Click "Load Sample" to see example</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p className="font-medium mb-2">Output Format:</p>
+                                <ul className="space-y-1">
+                                    <li>• code,name,description,price,quantity</li>
+                                    <li>• Unique descriptions for each product</li>
+                                    <li>• 3 variants per product type</li>
+                                    <li>• Ready for import to spreadsheets</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<ProductDescriptionGenerator />, document.getElementById('root'));
+    </script>
+</body>
+</html>
